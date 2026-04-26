@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <meta name="theme-color" content="#f4f7f6">
+    <meta name="description" content="&#12473;&#12510;&#12507;&#12391;&#20351;&#12358;&#36913;&#38291;ToDo&#12522;&#12473;&#12488;">
+    <title>Weekly ToDo</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="app.js" defer></script>
+  </head>
+  <body>
+    <header class="app-header">
+      <div>
+        <p class="eyebrow">Weekly ToDo</p>
+        <h1>&#20170;&#36913;&#12398;&#12479;&#12473;&#12463;</h1>
+      </div>
+      <nav class="header-actions" aria-label="App actions">
+        <a class="icon-button" href="settings.html" aria-label="&#35373;&#23450;&#12434;&#38283;&#12367;">&#9881;</a>
+        <button class="icon-button" id="manualResetButton" type="button" aria-label="&#20170;&#36913;&#12434;&#12486;&#12531;&#12503;&#12524;&#12540;&#12488;&#12395;&#25147;&#12377;">
+          <span aria-hidden="true">&#8635;</span>
+        </button>
+      </nav>
+    </header>
+
+    <main>
+      <div class="day-strip" id="dayStrip" aria-live="polite"></div>
+
+      <section class="long-memo-panel" aria-label="&#38263;&#26399;&#12513;&#12514;">
+        <ul class="long-memo-list" id="longMemoList"></ul>
+        <button class="long-memo-add" id="longMemoAddButton" type="button" aria-label="&#38263;&#26399;&#12513;&#12514;&#12434;&#36861;&#21152;">+</button>
+      </section>
+    </main>
+
+    <template id="dayTemplate">
+      <section class="day-card">
+        <div class="day-head">
+          <h2></h2>
+        </div>
+        <ul class="task-list"></ul>
+      </section>
+    </template>
+  </body>
+</html>
