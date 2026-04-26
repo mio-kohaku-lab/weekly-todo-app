@@ -124,7 +124,7 @@ h1 {
   scroll-padding-inline: 7%;
   scroll-snap-type: x mandatory;
   scrollbar-width: none;
-  padding: 2px 7% 14px;
+  padding: 2px 7% 10px;
 }
 
 .day-strip::-webkit-scrollbar {
@@ -142,7 +142,7 @@ h1 {
 
 .day-card {
   position: relative;
-  min-height: min(430px, calc(54vh - env(safe-area-inset-top)));
+  min-height: min(292px, calc(38vh - env(safe-area-inset-top)));
   scroll-snap-align: center;
   scroll-snap-stop: always;
 }
@@ -341,7 +341,7 @@ h1 {
 .long-memo-panel {
   position: relative;
   width: min(88%, 476px);
-  min-height: 156px;
+  min-height: 312px;
   margin: 2px auto 0;
   padding: 4px 46px 18px 4px;
 }
@@ -350,7 +350,7 @@ h1 {
   display: flex;
   flex-direction: column;
   gap: 6px;
-  min-height: 128px;
+  min-height: 282px;
   margin: 0;
   padding: 0;
   list-style: none;
@@ -435,6 +435,29 @@ h1 {
   padding: 0 14px;
 }
 
+.backup-panel {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 8px;
+  width: min(100%, 540px);
+  margin: 0 auto 12px;
+  padding: 0 14px;
+}
+
+.backup-button {
+  min-height: 44px;
+  border: 1px solid rgba(218, 228, 225, 0.92);
+  border-radius: 8px;
+  color: var(--accent-strong);
+  background: rgba(255, 255, 255, 0.78);
+  box-shadow: var(--shadow-soft);
+  font-weight: 760;
+}
+
+.backup-button:active {
+  transform: scale(0.98);
+}
+
 .settings-panel {
   box-shadow: var(--shadow-soft);
 }
@@ -457,6 +480,10 @@ h1 {
   }
 
   .settings-list {
+    padding-inline: 24px;
+  }
+
+  .backup-panel {
     padding-inline: 24px;
   }
 

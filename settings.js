@@ -1,4 +1,10 @@
 const TEMPLATE_KEY = "weekly-todo-template-v01";
+const BACKUP_KEYS = [
+  "weekly-todo-v01",
+  "weekly-todo-template-v01",
+  "weekly-todo-long-memos-v01",
+  "weekly-todo-template-updated-at",
+];
 
 const DAYS = [
   { key: "mon", label: "\u6708\u66dc\u65e5" },
@@ -12,9 +18,18 @@ const DAYS = [
 
 const settingsList = document.querySelector("#settingsList");
 const settingsDayTemplate = document.querySelector("#settingsDayTemplate");
+const exportBackupButton = document.querySelector("#exportBackupButton");
+const importBackupButton = document.querySelector("#importBackupButton");
+const importBackupInput = document.querySelector("#importBackupInput");
 
 let template = loadTemplate();
 render();
+
+exportBackupButton.addEventListener("click", exportBackup);
+importBackupButton.addEventListener("click", () => {
+  importBackupInput.click();
+});
+importBackupInput.addEventListener("change", importBackup);
 
 function render() {
   settingsList.innerHTML = "";
@@ -102,6 +117,96 @@ function loadTemplate() {
 function saveTemplate() {
   localStorage.setItem(TEMPLATE_KEY, JSON.stringify(template));
   localStorage.setItem("weekly-todo-template-updated-at", new Date().toISOString());
+}
+
+function exportBackup() {
+  const backup = {
+    app: "weekly-todo",
+    backupVersion: 1,
+    exportedAt: new Date().toISOString(),
+    data: Object.fromEntries(BACKUP_KEYS.map((key) => [key, localStorage.getItem(key)])),
+  };
+  const json = JSON.stringify(backup, null, 2);
+  const blob = new Blob([json], { type: "application/json" });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+
+  link.href = url;
+  link.download = `weekly-todo-backup-${toLocalDateString(new Date())}.json`;
+  document.body.append(link);
+  link.click();
+  link.remove();
+  URL.revokeObjectURL(url);
+}
+
+function importBackup(event) {
+  const file = event.target.files?.[0];
+  event.target.value = "";
+  if (!file) return;
+
+  const reader = new FileReader();
+  reader.addEventListener("load", () => {
+    try {
+      const parsed = JSON.parse(String(reader.result));
+      const data = getBackupData(parsed);
+      validateBackupData(data);
+
+      const ok = window.confirm("\u73fe\u5728\u306e\u30c7\u30fc\u30bf\u3092\u4e0a\u66f8\u304d\u3057\u307e\u3059\u3002\u3088\u308d\u3057\u3044\u3067\u3059\u304b\uff1f");
+      if (!ok) return;
+
+      restoreBackupData(data);
+      window.location.reload();
+    } catch {
+      window.alert("\u30d0\u30c3\u30af\u30a2\u30c3\u30d7\u30d5\u30a1\u30a4\u30eb\u3092\u8aad\u307f\u8fbc\u3081\u307e\u305b\u3093\u3002");
+    }
+  });
+  reader.addEventListener("error", () => {
+    window.alert("\u30d0\u30c3\u30af\u30a2\u30c3\u30d7\u30d5\u30a1\u30a4\u30eb\u3092\u8aad\u307f\u8fbc\u3081\u307e\u305b\u3093\u3002");
+  });
+  reader.readAsText(file);
+}
+
+function getBackupData(parsed) {
+  if (parsed && typeof parsed === "object" && parsed.data && typeof parsed.data === "object") {
+    return parsed.data;
+  }
+
+  if (parsed && typeof parsed === "object") return parsed;
+  throw new Error("Invalid backup");
+}
+
+function validateBackupData(data) {
+  const hasTargetKey = BACKUP_KEYS.some((key) => Object.prototype.hasOwnProperty.call(data, key));
+  if (!hasTargetKey) throw new Error("No target keys");
+
+  BACKUP_KEYS.forEach((key) => {
+    if (!Object.prototype.hasOwnProperty.call(data, key)) return;
+
+    const value = data[key];
+    if (value !== null && typeof value !== "string") {
+      throw new Error("Invalid value");
+    }
+  });
+}
+
+function restoreBackupData(data) {
+  BACKUP_KEYS.forEach((key) => {
+    if (!Object.prototype.hasOwnProperty.call(data, key)) return;
+
+    const value = data[key];
+    if (value === null) {
+      localStorage.removeItem(key);
+    } else {
+      localStorage.setItem(key, value);
+    }
+  });
+}
+
+function toLocalDateString(date) {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+  return `${year}-${month}-${day}`;
 }
 
 function createEmptyTemplate() {

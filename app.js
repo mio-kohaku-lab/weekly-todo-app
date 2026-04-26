@@ -12,6 +12,12 @@ const DAYS = [
   { key: "sun", label: "\u65e5\u66dc\u65e5" },
 ];
 
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () => {
+    navigator.serviceWorker.register("./service-worker.js").catch(() => {});
+  });
+}
+
 const dayStrip = document.querySelector("#dayStrip");
 const dayTemplate = document.querySelector("#dayTemplate");
 const manualResetButton = document.querySelector("#manualResetButton");

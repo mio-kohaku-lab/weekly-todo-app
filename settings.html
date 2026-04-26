@@ -3,9 +3,12 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-    <meta name="theme-color" content="#f4f7f6">
+    <meta name="theme-color" content="#477f7d">
     <meta name="description" content="&#36913;&#38291;ToDo&#12398;&#22522;&#26412;&#12479;&#12473;&#12463;&#35373;&#23450;">
     <title>Weekly ToDo Settings</title>
+    <link rel="manifest" href="manifest.json">
+    <link rel="apple-touch-icon" href="icons/icon-180.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="icons/favicon-32.png">
     <link rel="stylesheet" href="style.css">
     <script src="settings.js" defer></script>
   </head>
@@ -18,7 +21,15 @@
       <a class="icon-button" href="index.html" aria-label="&#12513;&#12452;&#12531;&#30011;&#38754;&#12408;&#25147;&#12427;">&#8249;</a>
     </header>
 
-    <main class="settings-list" id="settingsList"></main>
+    <main>
+      <section class="backup-panel" aria-label="&#12496;&#12483;&#12463;&#12450;&#12483;&#12503;">
+        <button class="backup-button" id="exportBackupButton" type="button">&#12496;&#12483;&#12463;&#12450;&#12483;&#12503;&#12434;&#26360;&#12365;&#20986;&#12377;</button>
+        <button class="backup-button" id="importBackupButton" type="button">&#12496;&#12483;&#12463;&#12450;&#12483;&#12503;&#12434;&#35501;&#12415;&#36796;&#12416;</button>
+        <input id="importBackupInput" type="file" accept="application/json,.json" hidden>
+      </section>
+
+      <div class="settings-list" id="settingsList"></div>
+    </main>
 
     <template id="settingsDayTemplate">
       <section class="settings-panel">
