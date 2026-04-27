@@ -15,8 +15,8 @@
   --accent: #7fa55a;
   --accent-strong: #3f6c2b;
   --accent-soft: #eef5cf;
-  --today-soft: #f4dde1;
-  --today-strong: #8a4a57;
+  --today-soft: #f6ded0;
+  --today-strong: #8a5546;
   --danger: #ad5a54;
   --radius-card: 12px;
   --radius-control: 14px;
@@ -96,7 +96,7 @@ a {
 h1 {
   margin: 0;
   font-size: 1.32rem;
-  font-weight: 760;
+  font-weight: 650;
   line-height: 1.12;
   letter-spacing: 0;
 }
@@ -119,6 +119,10 @@ h1 {
 .icon-button {
   flex: 0 0 auto;
   font-size: 1.16rem;
+}
+
+.history-link {
+  font-size: 1.34rem;
 }
 
 .icon-button:active,
@@ -176,7 +180,7 @@ h1 {
 }
 
 .day-card.is-today .day-head {
-  background: linear-gradient(180deg, #f5e1dd, var(--today-soft));
+  background: linear-gradient(180deg, #f8e8d7, var(--today-soft));
 }
 
 .day-head h2 {
@@ -597,6 +601,9 @@ h1 {
 }
 
 .settings-panel .task-item {
+  min-height: 46px;
+  padding-top: 5px;
+  padding-bottom: 5px;
   background: #fff;
   box-shadow: 0 4px 12px rgba(94, 116, 39, 0.05);
 }
