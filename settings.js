@@ -3,6 +3,7 @@ const BACKUP_KEYS = [
   "weekly-todo-v01",
   "weekly-todo-template-v01",
   "weekly-todo-long-memos-v01",
+  "weekly-todo-long-memo-history-v01",
   "weekly-todo-template-updated-at",
 ];
 

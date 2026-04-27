@@ -1,6 +1,7 @@
 const STORAGE_KEY = "weekly-todo-v01";
 const TEMPLATE_KEY = "weekly-todo-template-v01";
 const LONG_MEMO_KEY = "weekly-todo-long-memos-v01";
+const LONG_MEMO_HISTORY_KEY = "weekly-todo-long-memo-history-v01";
 
 const DAYS = [
   { key: "mon", label: "\u6708\u66dc\u65e5" },
@@ -186,12 +187,19 @@ function renderLongMemos() {
 }
 
 function groupLongMemos(memos) {
+  const today = new Date();
+  const todayStart = getDateStart(today);
   const datedMemos = [];
   const undatedMemos = [];
 
   memos.forEach((memo, index) => {
-    const date = parseMemoDate(memo.title);
-    const memoWithMeta = { ...memo, sortMonth: date?.month ?? 0, sortDay: date?.day ?? 0, sortIndex: index };
+    const date = parseMemoDate(memo.title, today);
+    const memoWithMeta = {
+      ...memo,
+      isDueSoon: date ? isDateDueSoon(date, todayStart) : false,
+      sortTime: date?.getTime() ?? 0,
+      sortIndex: index,
+    };
 
     if (date) {
       datedMemos.push(memoWithMeta);
@@ -201,28 +209,50 @@ function groupLongMemos(memos) {
   });
 
   datedMemos.sort((a, b) => {
-    if (a.sortMonth !== b.sortMonth) return a.sortMonth - b.sortMonth;
-    if (a.sortDay !== b.sortDay) return a.sortDay - b.sortDay;
+    if (a.sortTime !== b.sortTime) return a.sortTime - b.sortTime;
     return a.sortIndex - b.sortIndex;
   });
 
   return { datedMemos, undatedMemos };
 }
 
-function parseMemoDate(title) {
-  const match = title.match(/^\s*(\d{1,2})\u6708(\d{1,2})\u65e5/);
+function parseMemoDate(title, today) {
+  const match = title.match(/^\s*(?:(\d{4})\u5e74)?(\d{1,2})\u6708(\d{1,2})\u65e5/);
   if (!match) return null;
 
-  const month = Number(match[1]);
-  const day = Number(match[2]);
+  const explicitYear = match[1] ? Number(match[1]) : null;
+  const month = Number(match[2]);
+  const day = Number(match[3]);
   if (month < 1 || month > 12 || day < 1 || day > 31) return null;
 
-  return { month, day };
+  const year = explicitYear ?? today.getFullYear();
+  const date = new Date(year, month - 1, day);
+  if (date.getFullYear() !== year || date.getMonth() !== month - 1 || date.getDate() !== day) return null;
+
+  if (explicitYear) return date;
+
+  const todayStart = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+  if (date < todayStart) {
+    return new Date(year + 1, month - 1, day);
+  }
+
+  return date;
+}
+
+function isDateDueSoon(date, todayStart) {
+  const msPerDay = 24 * 60 * 60 * 1000;
+  const diffDays = Math.floor((getDateStart(date) - todayStart) / msPerDay);
+  return diffDays <= 2;
+}
+
+function getDateStart(date) {
+  return new Date(date.getFullYear(), date.getMonth(), date.getDate());
 }
 
 function createLongMemoElement(memo) {
   const item = document.createElement("li");
   item.className = "long-memo-item";
+  item.classList.toggle("is-due-soon", Boolean(memo.isDueSoon));
   item.textContent = memo.title;
   item.tabIndex = 0;
   item.setAttribute("aria-label", memo.title);
@@ -271,6 +301,12 @@ function createLongMemoElement(memo) {
 function confirmDeleteLongMemo(id) {
   const ok = window.confirm("\u3053\u306e\u30e1\u30e2\u3092\u524a\u9664\u3057\u307e\u3059\u304b\uff1f");
   if (!ok) return;
+
+  const memo = longMemos.find((item) => item.id === id);
+  const memoDate = memo ? parseMemoDate(memo.title, new Date()) : null;
+  if (memo && memoDate) {
+    saveLongMemoHistory(memo.title, memoDate);
+  }
 
   longMemos = longMemos.filter((memo) => memo.id !== id);
   saveLongMemos();
@@ -348,6 +384,26 @@ function loadLongMemos() {
       .map((memo) => ({
         id: typeof memo.id === "string" ? memo.id : createId(),
         title: memo.title.trim(),
+      }));
+  } catch {
+    return [];
+  }
+}
+
+function loadLongMemoHistory() {
+  try {
+    const raw = localStorage.getItem(LONG_MEMO_HISTORY_KEY);
+    if (!raw) return [];
+
+    const parsed = JSON.parse(raw);
+    if (!Array.isArray(parsed)) return [];
+
+    return parsed
+      .filter((item) => typeof item?.title === "string" && item.title.trim() && typeof item?.sortDate === "string")
+      .map((item) => ({
+        id: typeof item.id === "string" ? item.id : createId(),
+        title: item.title.trim(),
+        sortDate: item.sortDate,
       }));
   } catch {
     return [];
@@ -437,6 +493,16 @@ function saveState() {
 
 function saveLongMemos() {
   localStorage.setItem(LONG_MEMO_KEY, JSON.stringify(longMemos));
+}
+
+function saveLongMemoHistory(title, date) {
+  const history = loadLongMemoHistory();
+  history.push({
+    id: createId(),
+    title,
+    sortDate: toLocalDateString(date),
+  });
+  localStorage.setItem(LONG_MEMO_HISTORY_KEY, JSON.stringify(history));
 }
 
 function scrollTodayIntoView() {
