@@ -481,7 +481,7 @@ h1 {
   gap: 8px;
   width: min(100%, 540px);
   margin: 14px auto 0;
-  padding: 0 14px calc(24px + env(safe-area-inset-bottom));
+  padding: 0 14px;
 }
 
 .backup-button {
@@ -496,6 +496,17 @@ h1 {
 
 .backup-button:active {
   transform: scale(0.98);
+}
+
+.app-version {
+  width: min(100%, 540px);
+  margin: 12px auto 0;
+  padding: 0 14px calc(24px + env(safe-area-inset-bottom));
+  color: rgba(88, 107, 73, 0.48);
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0;
+  text-align: center;
 }
 
 .history-page {
@@ -630,6 +641,10 @@ h1 {
   }
 
   .backup-panel {
+    padding-inline: 24px;
+  }
+
+  .app-version {
     padding-inline: 24px;
   }
 
