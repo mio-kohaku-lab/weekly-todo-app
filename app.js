@@ -21,7 +21,6 @@ if ("serviceWorker" in navigator) {
 
 const dayStrip = document.querySelector("#dayStrip");
 const dayTemplate = document.querySelector("#dayTemplate");
-const manualResetButton = document.querySelector("#manualResetButton");
 const longMemoList = document.querySelector("#longMemoList");
 const longMemoAddButton = document.querySelector("#longMemoAddButton");
 
@@ -31,16 +30,6 @@ state = applyDateRollover(state, new Date());
 saveState();
 render();
 scrollTodayIntoView();
-
-manualResetButton.addEventListener("click", () => {
-  const ok = window.confirm("\u4eca\u9031\u306e\u30bf\u30b9\u30af\u3092\u30c6\u30f3\u30d7\u30ec\u30fc\u30c8\u306b\u623b\u3057\u307e\u3059\u304b\uff1f");
-  if (!ok) return;
-
-  state = createInitialState(new Date());
-  saveState();
-  render();
-  scrollTodayIntoView();
-});
 
 longMemoAddButton.addEventListener("click", () => {
   const text = window.prompt("\u9577\u671f\u30e1\u30e2\u3092\u8ffd\u52a0");

@@ -1,9 +1,11 @@
 const TEMPLATE_KEY = "weekly-todo-template-v01";
+const STORAGE_KEY = "weekly-todo-v01";
 const BACKUP_KEYS = [
   "weekly-todo-v01",
   "weekly-todo-template-v01",
   "weekly-todo-long-memos-v01",
   "weekly-todo-long-memo-history-v01",
+  "weekly-todo-shopping-list-v01",
   "weekly-todo-template-updated-at",
 ];
 
@@ -22,6 +24,7 @@ const settingsDayTemplate = document.querySelector("#settingsDayTemplate");
 const exportBackupButton = document.querySelector("#exportBackupButton");
 const importBackupButton = document.querySelector("#importBackupButton");
 const importBackupInput = document.querySelector("#importBackupInput");
+const manualResetButton = document.querySelector("#manualResetButton");
 
 let template = loadTemplate();
 render();
@@ -31,6 +34,7 @@ importBackupButton.addEventListener("click", () => {
   importBackupInput.click();
 });
 importBackupInput.addEventListener("change", importBackup);
+manualResetButton.addEventListener("click", resetWeeklyTasks);
 
 function render() {
   settingsList.innerHTML = "";
@@ -203,6 +207,31 @@ function restoreBackupData(data) {
   });
 }
 
+function resetWeeklyTasks() {
+  const ok = window.confirm("\u4eca\u9031\u306e\u30bf\u30b9\u30af\u3092\u30c6\u30f3\u30d7\u30ec\u30fc\u30c8\u306b\u623b\u3057\u307e\u3059\u304b\uff1f");
+  if (!ok) return;
+
+  const tasks = Object.fromEntries(
+    DAYS.map((day) => [
+      day.key,
+      (template[day.key] ?? []).map((title) => ({
+        id: createId(),
+        title,
+        done: false,
+      })),
+    ])
+  );
+
+  localStorage.setItem(
+    STORAGE_KEY,
+    JSON.stringify({
+      lastOpenedDate: toLocalDateString(new Date()),
+      tasks,
+    })
+  );
+  window.alert("\u4eca\u9031\u306e\u30bf\u30b9\u30af\u3092\u30c6\u30f3\u30d7\u30ec\u30fc\u30c8\u306b\u623b\u3057\u307e\u3057\u305f\u3002");
+}
+
 function toLocalDateString(date) {
   const year = date.getFullYear();
   const month = String(date.getMonth() + 1).padStart(2, "0");
@@ -212,4 +241,8 @@ function toLocalDateString(date) {
 
 function createEmptyTemplate() {
   return Object.fromEntries(DAYS.map((day) => [day.key, []]));
+}
+
+function createId() {
+  return `${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 8)}`;
 }
