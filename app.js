@@ -333,26 +333,42 @@ function applyDateRollover(currentState, now) {
   return {
     ...currentState,
     lastOpenedDate: today,
-    tasks: moveActiveTasks(currentState.tasks, diff),
+    tasks: movePastDueTasks(currentState.tasks, lastOpenedDate, diff),
   };
 }
 
-function moveActiveTasks(tasksByDay, diff) {
+function movePastDueTasks(tasksByDay, lastOpenedDate, diff) {
   const nextTasks = createEmptyTasks();
 
-  DAYS.forEach((day, index) => {
-    const tasks = tasksByDay[day.key] ?? [];
+  DAYS.forEach((day) => {
+    nextTasks[day.key] = [...(tasksByDay[day.key] ?? [])];
+  });
 
-    tasks.forEach((task) => {
+  const startIndex = getTodayIndex(parseLocalDate(lastOpenedDate));
+
+  for (let offset = 0; offset < diff; offset += 1) {
+    const sourceIndex = startIndex + offset;
+    const destinationIndex = sourceIndex + 1;
+
+    if (sourceIndex < 0 || destinationIndex >= DAYS.length) break;
+
+    const sourceKey = DAYS[sourceIndex].key;
+    const destinationKey = DAYS[destinationIndex].key;
+    const stayTasks = [];
+    const movingTasks = [];
+
+    nextTasks[sourceKey].forEach((task) => {
       if (task.done) {
-        nextTasks[day.key].push(task);
+        stayTasks.push(task);
         return;
       }
 
-      const destinationIndex = Math.min(index + diff, DAYS.length - 1);
-      nextTasks[DAYS[destinationIndex].key].push(task);
+      movingTasks.push(task);
     });
-  });
+
+    nextTasks[sourceKey] = stayTasks;
+    nextTasks[destinationKey].push(...movingTasks);
+  }
 
   return nextTasks;
 }
