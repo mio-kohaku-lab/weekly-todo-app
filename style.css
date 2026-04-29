@@ -197,47 +197,6 @@ h1 {
   transform: scale(0.96);
 }
 
-.page-flip-in {
-  animation: pageFlipIn 180ms ease-out both;
-  transform-origin: center center;
-}
-
-.page-flip-out {
-  animation: pageFlipOut 170ms ease-in both;
-  transform-origin: center center;
-}
-
-@keyframes pageFlipIn {
-  from {
-    opacity: 0;
-    transform: perspective(900px) rotateY(-76deg) scale(0.985);
-  }
-
-  to {
-    opacity: 1;
-    transform: perspective(900px) rotateY(0deg) scale(1);
-  }
-}
-
-@keyframes pageFlipOut {
-  from {
-    opacity: 1;
-    transform: perspective(900px) rotateY(0deg) scale(1);
-  }
-
-  to {
-    opacity: 0;
-    transform: perspective(900px) rotateY(76deg) scale(0.985);
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .page-flip-in,
-  .page-flip-out {
-    animation: none;
-  }
-}
-
 .day-strip {
   display: grid;
   grid-auto-flow: column;

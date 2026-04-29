@@ -12,7 +12,6 @@ const shortList = document.querySelector("#shortList");
 const shortItemTemplate = document.querySelector("#shortItemTemplate");
 const shortClearButton = document.querySelector("#shortClearButton");
 const listButtons = document.querySelectorAll(".short-tab");
-const shortBack = document.querySelector(".short-back");
 
 let shortState = loadShortState();
 let draggingId = null;
@@ -64,11 +63,6 @@ listButtons.forEach((button) => {
     renderShortTasks();
     renderListButtons();
   });
-});
-
-shortBack.addEventListener("click", (event) => {
-  event.preventDefault();
-  navigateWithFlip(shortBack.href);
 });
 
 function renderShortTasks() {
@@ -293,15 +287,6 @@ function clearLongPressTimer() {
 
   window.clearTimeout(longPressTimer);
   longPressTimer = null;
-}
-
-function navigateWithFlip(url) {
-  document.body.classList.remove("page-flip-in");
-  document.body.classList.add("page-flip-out");
-  sessionStorage.setItem("weekly-todo-flip-in", "index");
-  window.setTimeout(() => {
-    window.location.href = url;
-  }, 170);
 }
 
 function createId() {

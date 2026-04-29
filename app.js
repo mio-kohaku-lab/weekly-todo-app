@@ -23,7 +23,6 @@ const dayStrip = document.querySelector("#dayStrip");
 const dayTemplate = document.querySelector("#dayTemplate");
 const longMemoList = document.querySelector("#longMemoList");
 const longMemoAddButton = document.querySelector("#longMemoAddButton");
-const shortLink = document.querySelector(".short-link");
 
 let state = loadState();
 let longMemos = loadLongMemos();
@@ -31,15 +30,6 @@ state = applyDateRollover(state, new Date());
 saveState();
 render();
 scrollTodayIntoView();
-playReturnFlipIfNeeded();
-
-shortLink.addEventListener("click", (event) => {
-  event.preventDefault();
-  document.body.classList.add("page-flip-out");
-  window.setTimeout(() => {
-    window.location.href = shortLink.href;
-  }, 170);
-});
 
 longMemoAddButton.addEventListener("click", () => {
   const text = window.prompt("\u9577\u671f\u30e1\u30e2\u3092\u8ffd\u52a0");
@@ -524,13 +514,6 @@ function scrollTodayIntoView() {
   requestAnimationFrame(() => {
     scrollCardIntoView(getTodayIndex(new Date()), "auto");
   });
-}
-
-function playReturnFlipIfNeeded() {
-  if (sessionStorage.getItem("weekly-todo-flip-in") !== "index") return;
-
-  sessionStorage.removeItem("weekly-todo-flip-in");
-  document.body.classList.add("page-flip-in");
 }
 
 function scrollCardIntoView(index, behavior) {
