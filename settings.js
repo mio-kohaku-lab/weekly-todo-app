@@ -6,6 +6,7 @@ const BACKUP_KEYS = [
   "weekly-todo-long-memos-v01",
   "weekly-todo-long-memo-history-v01",
   "weekly-todo-shopping-list-v01",
+  "weekly-todo-short-tasks-v01",
   "weekly-todo-template-updated-at",
 ];
 
