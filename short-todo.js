@@ -301,7 +301,7 @@ function navigateWithFlip(url) {
   sessionStorage.setItem("weekly-todo-flip-in", "index");
   window.setTimeout(() => {
     window.location.href = url;
-  }, 320);
+  }, 170);
 }
 
 function createId() {

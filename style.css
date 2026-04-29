@@ -198,12 +198,12 @@ h1 {
 }
 
 .page-flip-in {
-  animation: pageFlipIn 340ms ease-out both;
+  animation: pageFlipIn 180ms ease-out both;
   transform-origin: center center;
 }
 
 .page-flip-out {
-  animation: pageFlipOut 320ms ease-in both;
+  animation: pageFlipOut 170ms ease-in both;
   transform-origin: center center;
 }
 

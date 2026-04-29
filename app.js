@@ -38,7 +38,7 @@ shortLink.addEventListener("click", (event) => {
   document.body.classList.add("page-flip-out");
   window.setTimeout(() => {
     window.location.href = shortLink.href;
-  }, 320);
+  }, 170);
 });
 
 longMemoAddButton.addEventListener("click", () => {
