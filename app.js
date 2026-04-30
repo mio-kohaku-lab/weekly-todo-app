@@ -356,7 +356,7 @@ function movePastDueTasks(tasksByDay, lastOpenedDate, diff) {
     });
 
     nextTasks[sourceKey] = stayTasks;
-    nextTasks[destinationKey].push(...movingTasks);
+    nextTasks[destinationKey].unshift(...movingTasks);
   }
 
   return nextTasks;
