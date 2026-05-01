@@ -605,7 +605,9 @@ h1 {
 
 .history-list {
   display: grid;
+  align-content: start;
   gap: 8px;
+  grid-auto-rows: max-content;
   min-height: 280px;
   margin: 0;
   padding: 0;
