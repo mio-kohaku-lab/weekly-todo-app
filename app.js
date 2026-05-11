@@ -182,11 +182,13 @@ function groupLongMemos(memos) {
   const undatedMemos = [];
 
   memos.forEach((memo, index) => {
-    const date = parseMemoDate(memo.title, today);
+    const schedule = parseMemoSchedule(memo.title, today);
+    const date = schedule?.date ?? null;
     const memoWithMeta = {
       ...memo,
       isDueSoon: date ? isDateDueSoon(date, todayStart) : false,
-      sortTime: date?.getTime() ?? 0,
+      sortDateTime: date?.getTime() ?? 0,
+      sortTimeValue: schedule?.timeSortValue ?? -1,
       sortIndex: index,
     };
 
@@ -198,7 +200,8 @@ function groupLongMemos(memos) {
   });
 
   datedMemos.sort((a, b) => {
-    if (a.sortTime !== b.sortTime) return a.sortTime - b.sortTime;
+    if (a.sortDateTime !== b.sortDateTime) return a.sortDateTime - b.sortDateTime;
+    if (a.sortTimeValue !== b.sortTimeValue) return a.sortTimeValue - b.sortTimeValue;
     return a.sortIndex - b.sortIndex;
   });
 
@@ -206,6 +209,10 @@ function groupLongMemos(memos) {
 }
 
 function parseMemoDate(title, today) {
+  return parseMemoSchedule(title, today)?.date ?? null;
+}
+
+function parseMemoSchedule(title, today) {
   const match = title.match(/^\s*(?:(\d{4})\u5e74)?(\d{1,2})\u6708(\d{1,2})\u65e5/);
   if (!match) return null;
 
@@ -218,14 +225,36 @@ function parseMemoDate(title, today) {
   const date = new Date(year, month - 1, day);
   if (date.getFullYear() !== year || date.getMonth() !== month - 1 || date.getDate() !== day) return null;
 
-  if (explicitYear) return date;
+  if (explicitYear) {
+    return {
+      date,
+      timeSortValue: parseMemoTime(title.slice(match[0].length)),
+    };
+  }
 
   const todayStart = new Date(today.getFullYear(), today.getMonth(), today.getDate());
   if (date < todayStart) {
-    return new Date(year + 1, month - 1, day);
+    return {
+      date: new Date(year + 1, month - 1, day),
+      timeSortValue: parseMemoTime(title.slice(match[0].length)),
+    };
   }
 
-  return date;
+  return {
+    date,
+    timeSortValue: parseMemoTime(title.slice(match[0].length)),
+  };
+}
+
+function parseMemoTime(text) {
+  const match = text.match(/^\s*(?:(\d{1,2})\u6642(?:(\d{1,2})\u5206)?|(\d{1,2}):(\d{1,2}))/);
+  if (!match) return -1;
+
+  const hour = Number(match[1] ?? match[3]);
+  const minute = Number(match[2] ?? match[4] ?? 0);
+  if (hour < 0 || hour > 23 || minute < 0 || minute > 59) return -1;
+
+  return hour * 60 + minute;
 }
 
 function isDateDueSoon(date, todayStart) {
