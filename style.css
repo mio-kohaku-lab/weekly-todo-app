@@ -699,7 +699,7 @@ h1 {
   width: min(100%, 540px);
   min-height: calc(100dvh - 96px - env(safe-area-inset-top));
   margin: 0 auto;
-  padding: 0 14px calc(24px + env(safe-area-inset-bottom));
+  padding: 0 14px calc(56px + env(safe-area-inset-bottom));
 }
 
 .shopping-form {
