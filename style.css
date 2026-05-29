@@ -700,15 +700,23 @@ h1 {
 }
 
 .shopping-form {
-  position: sticky;
-  top: calc(58px + env(safe-area-inset-top));
-  z-index: 2;
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto;
   gap: 8px;
   margin: 0 0 12px;
   padding: 8px 0 10px;
   background: linear-gradient(180deg, rgba(255, 255, 255, 0.96), rgba(255, 255, 255, 0.82));
+}
+
+.shopping-main-form {
+  position: sticky;
+  top: calc(58px + env(safe-area-inset-top));
+  z-index: 2;
+}
+
+.shopping-stock-form {
+  margin-bottom: 8px;
+  padding-top: 0;
 }
 
 .shopping-form input {
@@ -747,10 +755,32 @@ h1 {
   align-content: start;
   gap: 0;
   grid-auto-rows: max-content;
-  min-height: 60vh;
   margin: 0;
   padding: 1px 0 0;
   list-style: none;
+}
+
+.shopping-main-list {
+  min-height: 34vh;
+}
+
+.shopping-stock-section {
+  margin-top: 24px;
+  padding-top: 12px;
+  border-top: 1px solid rgba(234, 219, 156, 0.48);
+}
+
+.shopping-stock-title {
+  margin: 0 0 8px;
+  color: rgba(111, 84, 34, 0.68);
+  font-size: 0.78rem;
+  font-weight: 760;
+  line-height: 1.2;
+  letter-spacing: 0;
+}
+
+.shopping-stock-list {
+  min-height: 210px;
 }
 
 .shopping-item {

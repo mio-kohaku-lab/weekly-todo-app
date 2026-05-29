@@ -22,12 +22,21 @@
     </header>
 
     <main class="shopping-page">
-      <form class="shopping-form" id="shoppingForm">
+      <form class="shopping-form shopping-main-form" id="shoppingForm">
         <input id="shoppingInput" type="text" maxlength="60" autocomplete="off" placeholder="&#36023;&#12358;&#12418;&#12398;&#12434;&#36861;&#21152;">
         <button type="submit">&#36861;&#21152;</button>
       </form>
 
-      <ul class="shopping-list" id="shoppingList" aria-live="polite"></ul>
+      <ul class="shopping-list shopping-main-list" id="shoppingList" aria-live="polite"></ul>
+
+      <section class="shopping-stock-section" aria-label="&#12473;&#12488;&#12483;&#12463;&#20505;&#35036;">
+        <h2 class="shopping-stock-title">&#12473;&#12488;&#12483;&#12463;&#20505;&#35036;</h2>
+        <form class="shopping-form shopping-stock-form" id="shoppingStockForm">
+          <input id="shoppingStockInput" type="text" maxlength="60" autocomplete="off" placeholder="&#12473;&#12488;&#12483;&#12463;&#20505;&#35036;&#12434;&#36861;&#21152;">
+          <button type="submit">&#36861;&#21152;</button>
+        </form>
+        <ul class="shopping-list shopping-stock-list" id="shoppingStockList" aria-live="polite"></ul>
+      </section>
     </main>
 
     <template id="shoppingItemTemplate">
