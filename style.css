@@ -715,8 +715,9 @@ h1 {
 }
 
 .shopping-stock-form {
-  margin-bottom: 8px;
-  padding-top: 0;
+  margin: 10px 0 0;
+  padding: 4px 0 0;
+  background: transparent;
 }
 
 .shopping-form input {
@@ -766,8 +767,10 @@ h1 {
 
 .shopping-stock-section {
   margin-top: 24px;
-  padding-top: 12px;
+  border-radius: 10px;
+  padding: 10px 10px 12px;
   border-top: 1px solid rgba(234, 219, 156, 0.48);
+  background: rgba(255, 247, 218, 0.42);
 }
 
 .shopping-stock-title {
@@ -780,7 +783,7 @@ h1 {
 }
 
 .shopping-stock-list {
-  min-height: 210px;
+  min-height: 0;
 }
 
 .shopping-item {
