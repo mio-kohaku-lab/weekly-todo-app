@@ -2,6 +2,7 @@ const SHOPPING_KEY = "weekly-todo-shopping-list-v01";
 const SHOPPING_STOCK_KEY = "weekly-todo-shopping-stock-list-v01";
 
 const shoppingItemTemplate = document.querySelector("#shoppingItemTemplate");
+const shoppingStockAddButton = document.querySelector("#shoppingStockAddButton");
 
 const lists = {
   main: {
@@ -13,11 +14,9 @@ const lists = {
     items: [],
   },
   stock: {
-    form: document.querySelector("#shoppingStockForm"),
-    input: document.querySelector("#shoppingStockInput"),
     list: document.querySelector("#shoppingStockList"),
     storageKey: SHOPPING_STOCK_KEY,
-    emptyText: "\u30b9\u30c8\u30c3\u30af\u5019\u88dc\u306f\u7a7a\u3067\u3059",
+    emptyText: "",
     items: [],
   },
 };
@@ -26,26 +25,35 @@ let dragging = null;
 
 Object.entries(lists).forEach(([key, state]) => {
   state.items = loadShoppingItems(state.storageKey);
-  state.form.addEventListener("submit", (event) => {
-    event.preventDefault();
-    addShoppingItem(key);
-  });
   renderShoppingItems(key);
 });
 
-function addShoppingItem(listKey) {
-  const state = lists[listKey];
-  const title = state.input.value.trim();
+lists.main.form.addEventListener("submit", (event) => {
+  event.preventDefault();
+  const title = lists.main.input.value.trim();
   if (!title) return;
 
+  addShoppingItem("main", title);
+  lists.main.input.value = "";
+  lists.main.input.focus();
+});
+
+shoppingStockAddButton.addEventListener("click", () => {
+  const text = window.prompt("\u30b9\u30c8\u30c3\u30af\u5019\u88dc\u3092\u8ffd\u52a0");
+  const title = text?.trim();
+  if (!title) return;
+
+  addShoppingItem("stock", title);
+});
+
+function addShoppingItem(listKey, title) {
+  const state = lists[listKey];
   state.items.unshift({
     id: createId(),
     title,
   });
-  state.input.value = "";
   saveShoppingItems(listKey);
   renderShoppingItems(listKey);
-  state.input.focus();
 }
 
 function renderShoppingItems(listKey) {
@@ -53,6 +61,8 @@ function renderShoppingItems(listKey) {
   state.list.innerHTML = "";
 
   if (state.items.length === 0) {
+    if (!state.emptyText) return;
+
     const empty = document.createElement("p");
     empty.className = "shopping-empty";
     empty.textContent = state.emptyText;
